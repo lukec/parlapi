@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+    <meta http-equiv="Content-Language" content="en" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>ParlAPI.ca - Parliamentary Voting Interface</title>
+        <style type="text/css">
+            body {
+                color: #000;
+                background-color: #eee;
+            }
+            div#container {
+                width: 640px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                text-align: left;
+                background-color: #ccc;
+                border: 1px solid #aaa;
+            }
+            p, h1, h2 {
+                margin-left: 20px;
+                margin-right: 20px;
+                font-family: verdana, tahoma, sans-serif;
+            }
+            a {
+                font-family: verdana, tahoma, sans-serif;
+            }
+            :link, :visited {
+                    text-decoration: none;
+                    color: #b00;
+                    border-bottom: 1px dotted #bbb;
+            }
+            :link:hover, :visited:hover {
+                    color: #555;
+            }
+            div#topbar {
+                margin: 0px;
+            }
+            pre {
+                margin: 10px;
+                padding: 8px;
+            }
+            div#mainbar {
+                padding: 8px;
+                margin: 10px;
+                background-color: #fff;
+                border: 1px solid #aaa;
+            }
+            h1 {
+                font-size: 0.9em;
+                font-weight: normal;
+                text-align: center;
+            }
+            h2 {
+                font-size: 1.0em;
+            }
+            p {
+                font-size: 0.9em;
+            }
+            p img {
+                float: right;
+                margin-left: 10px;
+            }
+            span#appname {
+                font-weight: bold;
+                font-size: 1.6em;
+            }
+            div#footbar {
+                padding: 8px;
+                margin: 10px;
+                background-color: #ddd;
+                border: 1px solid #aaa;
+            }
+            span.repr {
+                padding: 2px;
+                top-margin: 1px;
+                background-color: #fff;
+                border: 1px solid #aaa;
+            }
+        </style>
+        <link rel="stylesheet" href="css/blueprint/screen.css" type="text/css" media="screen, projection">
+        <link rel="stylesheet" href="css/blueprint/print.css" type="text/css" media="print">
+        <!--[if IE]>
+        <link rel="stylesheet" href="css/blueprint/ie.css" type="text/css" media="screen, projection">
+        <![endif]-->
+
+    </head>
+    <body>
+        <div id="container">
+            [% content %]
+        </div>
+    </body>
+</html>
