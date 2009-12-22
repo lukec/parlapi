@@ -1,0 +1,93 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Net::Parliament;
+use lib 'lib';
+use ParlAPI::Model;
+use Getopt::Long;
+
+my %opts = (
+    parliament => 40,
+    session    => 2,
+    verbose    => 1,
+);
+GetOptions(
+    'p|parliament',
+    's|session',
+    'v|verbose',
+) or die <<EOT;
+USAGE: $0 [options]
+
+Where options are:
+ -p|parliament Which parliament? eg: 40
+ -s|session    Which session?    eg: 2
+ -v|verbose
+
+EOT
+my $verbose = delete $opts{verbose};
+
+my $model = ParlAPI::Model->new;
+
+my $parliament = $model->get_parliament(%opts);
+unless ($parliament) {
+    die "Couldn't find Parliament ($opts{parliament}:$opts{session})";
+}
+
+my $np = Net::Parliament->new( %opts );
+
+print "Fetching Members ...\n" if $verbose;
+my $members = $np->members(extended => 1);
+my $count = 1;
+for my $m (@$members) {
+    print $count++, ") $m->{member_id} - $m->{member_name}\n";
+    $model->delete_member($m->{member_id});
+    my $member = $model->create_member($m);
+}
+
+exit;
+
+print "Fetching Bills ...\n" if $verbose;
+my $bills = $np->bills;
+my %bills;
+for (@$bills) {
+    $_->{parliament} = $parliament;
+    delete $_->{session};
+    my $bill = ParlAPI::Bill->new(%$_);
+
+    my $votes = ParlAPI::BillVote->CreateVotes(
+        $bill,
+        $np->bill_votes($bill->name)
+    );
+
+    $bill->votes->insert($_) for @$votes;
+
+    warn "Storing " . $bill->id if $verbose;
+    $parliament->bills->insert($bill);
+    $bills{$bill->name} = $bill;
+}
+
+
+print "Fetching Member Votes ...\n" if $verbose;
+for my $m (@$members) {
+    my $votes = $np->member_votes($m->id);
+    for my $v (@$votes) {
+        my $billname = $v->{RelatedBill}{number};
+        my $bill = $bills{ $billname };
+        unless ($bill) {
+            warn "Could not find bill $billname\n";
+            next;
+        }
+
+        my $mv = ParlAPI::MemberVote->Create(
+            bill   => $bill,
+            member => $m,
+            vote   => $v,
+        );
+        $m->votes->insert($mv);
+    }
+}
+
+my $db = parlapi::DB->new->db;
+my $scope = $db->new_scope;
+$db->insert($parliament);
+
