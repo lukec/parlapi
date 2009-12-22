@@ -1,16 +1,17 @@
-use CGI::PSGI;
-use CGI::Application::PSGI;
-use ParlAPI;
+#!perl
+use Plack::Builder;
+use Plack::App::HTTP::Router;
+use HTTP::Router::Declare;
 
-warn "$ENV{PWD}/templates/home.tt2";
-my $handler = sub {
-    my $env = shift;
-    my $app = ParlAPI->new({
-        QUERY => CGI::PSGI->new($env),
-        PARAMS => {
-            debug => 0,
-            parl_base => $ENV{PWD},
-        },
-    });
-    CGI::Application::PSGI->run($app);
+my $router = router {
+    match '/' => to { controller => 'ParlAPI', action => 'index' };
+    match '/parliaments' =>
+        to { controller => 'ParlAPI::Parliaments', action => 'pretty_list' };
 };
+my $app = Plack::App::HTTP::Router->new({ router => $router} )->to_app;
+
+builder {
+    enable "Plack::Middleware::StackTrace";
+    $app;
+};
+
