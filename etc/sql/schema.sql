@@ -1,12 +1,15 @@
 BEGIN;
 
 CREATE TABLE parliament (
-    parl_id int NOT NULL,
+    parl_id serial UNIQUE,
     parl int NOT NULL,
     "session" int NOT NULL,
     start_date timestamptz NOT NULL,
-    end_date timestamptz NOT NULL
+    end_date timestamptz
 );
+
+INSERT INTO parliament (parl, "session", start_date)
+    VALUES (40, 2, '2009-01-26'::timestamptz);
 
 CREATE UNIQUE INDEX parliament__id ON parliament (parl_id);
 CREATE UNIQUE INDEX parliament__parl_session ON parliament (parl, session);
@@ -19,7 +22,7 @@ CREATE TABLE member (
     constituency text NOT NULL,
     email text NOT NULL,
     website text NOT NULL,
-    phone text NOT NULL,
+    telephone text NOT NULL,
     fax text NOT NULL,
     province text NOT NULL,
     profile_photo_url text NOT NULL
@@ -36,7 +39,7 @@ CREATE INDEX parliament_members__parl_id ON parliament_members (parl_id);
 CREATE INDEX parliament_members__member_id ON parliament_members (member_id);
 
 CREATE TABLE bill (
-    bill_id int NOT NULL,
+    bill_id serial UNIQUE,
     parl_id int NOT NULL,
     name text NOT NULL,
     summary text NOT NULL,
@@ -52,7 +55,7 @@ CREATE INDEX bill__sponsor_id ON bill (sponsor_id);
 CREATE UNIQUE INDEX bill__parl_name ON bill (parl_id, name);
 
 CREATE TABLE bill_vote (
-    bill_vote_id int NOT NULL,
+    bill_vote_id serial UNIQUE,
     bill_id int NOT NULL,
     nays int NOT NULL,
     yays int NOT NULL,
