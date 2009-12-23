@@ -3,6 +3,7 @@ use Moose::Role;
 use Template;
 use Plack::Response;
 use ParlAPI::Model;
+use JSON qw/to_json/;
 use namespace::clean -except => 'meta';
 
 has 'template' => (is => 'ro', lazy_build => 1);
@@ -25,11 +26,31 @@ sub render {
     return $resp->finalize;
 }
 
+sub render_json {
+    my $self = shift;
+    my $hash = shift;
+    
+    my $resp = Plack::Response->new(200);
+    $resp->content_type('application/json');
+    $resp->body( to_json($hash, {utf8 => 1}) );
+    return $resp->finalize;
+}
+
+sub render_text {
+    my $self = shift;
+    my $body = shift;
+    
+    my $resp = Plack::Response->new(200);
+    $resp->content_type('text/plain');
+    $resp->body( $body );
+    return $resp->finalize;
+}
+
 sub _build_template {
     my $self = shift;
     return Template->new({
-            INCLUDE_PATH => "$ENV{PWD}/templates",
-        });
+        INCLUDE_PATH => "$ENV{PWD}/templates",
+    });
 }
 
 sub _build_model { ParlAPI::Model->new }

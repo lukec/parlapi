@@ -24,6 +24,13 @@ sub BUILDARGS {
     return $args;
 }
 
+sub to_hash {
+    my $self = shift;
+    return { map { $_ => $self->$_ } 
+        qw/member_id name url caucus constituency email website telephone
+           fax province profile_photo_url/ }
+}
+
 sub insert_sql {
     my $self = shift;
 
