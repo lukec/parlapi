@@ -46,7 +46,6 @@ sub members {
     my $results = $sth->fetchall_arrayref({});
     my @members;
     for my $m (@$results) {
-        warn $m->{name} if $m->{member_id} == 128145;
         push @members, ParlAPI::Model::Member->new($m);
     }
     return \@members;
