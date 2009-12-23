@@ -11,6 +11,10 @@ my $router = router {
         to { controller => 'ParlAPI::Members', action => 'pretty_list' };
     match '/members.{format}' =>
         to { controller => 'ParlAPI::Members', action => 'pretty_list' };
+    match '/members/{member}' =>
+        to { controller => 'ParlAPI::Members', action => 'show_member' };
+    match '/members/{member}.format' =>
+        to { controller => 'ParlAPI::Members', action => 'show_member' };
 };
 my $app = Plack::App::HTTP::Router->new({ router => $router} )->to_app;
 

@@ -1,0 +1,23 @@
+[% WRAPPER wrapper.tt2 %]
+  <h2>Members of Parliament - [% member.name %]</h2>
+  <table border="0" width="100%">
+    <tr>
+      <td width="50%">
+        <strong>Name:</strong>[% member.name %]<br />
+        <strong>Caucus:</strong>[% member.caucus %]<br />
+        <strong>Constituency:</strong>[% member.constituency %]<br />
+        <strong>Province:</strong>[% member.province %]<br />
+        <strong>Email:</strong>[% member.email %]<br />
+        <strong>Telephone:</strong>[% member.telephone %]<br />
+        <strong>Website:</strong><a href="[% member.website %]">[% member.website %]</a><br />
+        <p><a href="[% member.url %]">Official Page</a></p>
+      </td>
+      <td valign="top">
+        <img src="[% member.profile_photo_url %]"><br />
+        <a href="http://www.parl.gc.ca/information/copyright/terms_Conditions.asp?Language=E#Copyrights">© House of Commons</a>
+      </td>
+    </tr>
+  </table>
+  <br />
+  <a href="/members">Back to /members</a>
+[% END %]

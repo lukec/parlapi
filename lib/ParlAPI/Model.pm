@@ -24,6 +24,28 @@ sub get_parliament {
     return ParlAPI::Model::Parliament->new($result->[0]);
 }
 
+sub get_member {
+    my $self = shift;
+    my $maybe_id   = shift;
+    
+    my $where;
+    if ($maybe_id =~ m/\D/) {
+        $where = 'LOWER(name) = LOWER(?)';
+    }
+    else {
+        $where = 'member_id = ?';
+    }
+    my $sth = $self->db->sql_execute(qq{
+            SELECT * 
+              FROM member
+             WHERE $where
+        }, $maybe_id
+    );
+    my $result = $sth->fetchall_arrayref({});
+    return undef unless $result->[0];
+    return ParlAPI::Model::Member->new($result->[0]);
+}
+
 sub delete_member {
     my $self = shift;
     my $member_id = shift;

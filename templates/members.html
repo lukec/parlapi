@@ -2,7 +2,7 @@
   <h2>Members of Parliament</h2>
   <ul>
     [% FOREACH m IN members %]
-      <li><a href="[% m.url %]">[% m.name %]</a></li>
+      <li><a href="/members/[% m.member_id %]">[% m.name %]</a></li>
     [% END %]
   </ul>
 [% END %]
