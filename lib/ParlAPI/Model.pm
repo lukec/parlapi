@@ -59,7 +59,6 @@ sub delete_member {
 sub delete_bill {
     my $self = shift;
     my $bill_name = shift;
-    warn "Deleting $bill_name";
     $self->db->sql_execute(
         q{DELETE FROM bill WHERE name = ?},
         $bill_name,
@@ -76,7 +75,6 @@ sub create_member {
 sub create_bill {
     my $self = shift;
     my $bill_hash = shift;
-    warn "creating $bill_hash->{name}";
     my $b = ParlAPI::Model::Bill->new($bill_hash);
     $b->insert($self->db);
     return $b;
