@@ -18,6 +18,9 @@ sub pretty_list {
         elsif ($format =~ m/^te?xt$/) {
             return $self->render_text(join "\n", map { $_->name } @$members);
         }
+        else {
+            return $self->unknown_format($format);
+        }
     }
     return $self->render('members.html', { members => $members });
 }

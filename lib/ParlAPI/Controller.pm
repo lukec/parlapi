@@ -46,6 +46,16 @@ sub render_text {
     return $resp->finalize;
 }
 
+sub unknown_format {
+    my $self = shift;
+    my $format = shift;
+
+    my $resp = Plack::Response->new(415);
+    $resp->content_type('text/plain');
+    $resp->body( "Sorry, '$format' is not a supported format." );
+    return $resp->finalize;
+}
+
 sub _build_template {
     my $self = shift;
     return Template->new({
