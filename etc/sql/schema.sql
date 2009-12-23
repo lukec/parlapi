@@ -43,16 +43,21 @@ CREATE TABLE bill (
     parl_id int NOT NULL,
     name text NOT NULL,
     summary text NOT NULL,
-    sponsor text NOT NULL,
     sponsor_title text NOT NULL,
-    sponsor_id int NOT NULL,
-    links text[]
+    sponsor_id int
 );
 
 CREATE UNIQUE INDEX bill__id ON bill (bill_id);
 CREATE INDEX bill__parl_id ON bill (parl_id);
 CREATE INDEX bill__sponsor_id ON bill (sponsor_id);
 CREATE UNIQUE INDEX bill__parl_name ON bill (parl_id, name);
+
+CREATE TABLE bill_links (
+    bill_id int NOT NULL,
+    link_name text NOT NULL,
+    link_href text NOT NULL
+);
+CREATE INDEX bill__bill_id ON bill (bill_id);
 
 CREATE TABLE bill_vote (
     bill_vote_id serial UNIQUE,

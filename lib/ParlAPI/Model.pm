@@ -3,6 +3,7 @@ use MooseX::Singleton;
 use ParlAPI::DB;
 use ParlAPI::Model::Parliament;
 use ParlAPI::Model::Member;
+use ParlAPI::Model::Bill;
 use namespace::clean -except => 'meta';
 
 has 'db' => (is => 'ro', isa => 'ParlAPI::DB', lazy_build => 1);
@@ -55,11 +56,30 @@ sub delete_member {
     );
 }
 
+sub delete_bill {
+    my $self = shift;
+    my $bill_name = shift;
+    warn "Deleting $bill_name";
+    $self->db->sql_execute(
+        q{DELETE FROM bill WHERE name = ?},
+        $bill_name,
+    );
+}
+
 sub create_member {
     my $self = shift;
     my $m = ParlAPI::Model::Member->new(@_);
     $self->db->sql_execute( $m->insert_sql );
     return $m;
+}
+
+sub create_bill {
+    my $self = shift;
+    my $bill_hash = shift;
+    warn "creating $bill_hash->{name}";
+    my $b = ParlAPI::Model::Bill->new($bill_hash);
+    $b->insert($self->db);
+    return $b;
 }
 
 sub members {

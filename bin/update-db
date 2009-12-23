@@ -35,36 +35,31 @@ unless ($parliament) {
 
 my $np = Net::Parliament->new( %opts );
 
-print "Fetching Members ...\n" if $verbose;
-my $members = $np->members(extended => 1);
-my $count = 1;
-for my $m (@$members) {
-    print $count++, ") $m->{member_id} - $m->{member_name}\n";
-    $model->delete_member($m->{member_id});
-    my $member = $model->create_member($m);
+my $members;
+if (1) {
+    print "Fetching Members ...\n" if $verbose;
+    $members = $np->members(extended => 1);
+    my $count = 1;
+    for my $m (@$members) {
+        print $count++, ") $m->{member_id} - $m->{member_name}\n";
+        $model->delete_member($m->{member_id});
+        my $member = $model->create_member($m);
+    }
 }
 
-exit;
-
-print "Fetching Bills ...\n" if $verbose;
-my $bills = $np->bills;
 my %bills;
-for (@$bills) {
-    $_->{parliament} = $parliament;
-    delete $_->{session};
-    my $bill = ParlAPI::Bill->new(%$_);
-
-    my $votes = ParlAPI::BillVote->CreateVotes(
-        $bill,
-        $np->bill_votes($bill->name)
-    );
-
-    $bill->votes->insert($_) for @$votes;
-
-    warn "Storing " . $bill->id if $verbose;
-    $parliament->bills->insert($bill);
-    $bills{$bill->name} = $bill;
+if (1) {
+    print "Fetching Bills ...\n" if $verbose;
+    my $bills = $np->bills;
+    my $count = 1;
+    for my $b (@$bills) {
+        $b->{parl_id} = $parliament->id;
+        print $count++, ") $b->{name}\n";
+        $model->delete_bill($b->{name});
+        $model->create_bill($b);
+    }
 }
+exit;
 
 
 print "Fetching Member Votes ...\n" if $verbose;
@@ -78,16 +73,5 @@ for my $m (@$members) {
             next;
         }
 
-        my $mv = ParlAPI::MemberVote->Create(
-            bill   => $bill,
-            member => $m,
-            vote   => $v,
-        );
-        $m->votes->insert($mv);
     }
 }
-
-my $db = parlapi::DB->new->db;
-my $scope = $db->new_scope;
-$db->insert($parliament);
-

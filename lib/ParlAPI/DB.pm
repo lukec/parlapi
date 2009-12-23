@@ -16,6 +16,13 @@ sub sql_execute {
     return $sth;
 }
 
+sub sql_singlevalue {
+    my $self = shift;
+    my $sth = $self->sql_execute(@_);
+    my $all = $sth->fetchall_arrayref();
+    return $all->[0][0];
+}
+
 sub _build_dbh {
     my $self = shift;
 
