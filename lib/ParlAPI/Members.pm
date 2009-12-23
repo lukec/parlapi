@@ -22,7 +22,13 @@ sub pretty_list {
             return $self->unknown_format($format);
         }
     }
-    return $self->render('members.html', { members => $members });
+    return $self->render('members.html', 
+        { 
+            members => $members,
+            json_url => '/members.json',
+            text_url => '/members.txt',
+        },
+    );
 }
 
 sub show_member {
@@ -50,7 +56,15 @@ sub show_member {
             return $self->unknown_format($format);
         }
     }
-    return $self->render('member.html', { member => $member });
+
+    my $member_id = $member->member_id;
+    return $self->render('member.html', 
+        { 
+            member => $member,
+            json_url => "/members/$member_id.json",
+            text_url => "/members/$member_id.txt",
+        },
+    );
 }
 
 __PACKAGE__->meta->make_immutable;

@@ -96,6 +96,14 @@
           <div id="mainbar">
             [% content %]
           </div>
+          <div id="formats">
+            [% IF json_url %]
+              <a href="[% json_url %]">As JSON</a>
+            [% END %]
+            [% IF text_url %]
+              <a href="[% text_url %]">As Text</a>
+            [% END %]
+          </div>
         </div>
     </body>
 </html>
