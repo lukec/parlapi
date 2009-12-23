@@ -7,6 +7,8 @@ my $router = router {
     match '/' => to { controller => 'ParlAPI', action => 'index' };
     match '/parliaments' =>
         to { controller => 'ParlAPI::Parliaments', action => 'pretty_list' };
+    match '/members' =>
+        to { controller => 'ParlAPI::Members', action => 'pretty_list' };
 };
 my $app = Plack::App::HTTP::Router->new({ router => $router} )->to_app;
 

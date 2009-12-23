@@ -90,7 +90,12 @@
     </head>
     <body>
         <div id="container">
+          <div id="topbar">
+            <h1><span id="appname">ParlAPI.ca</span></h1>
+          </div>
+          <div id="mainbar">
             [% content %]
+          </div>
         </div>
     </body>
 </html>

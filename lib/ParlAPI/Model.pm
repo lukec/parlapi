@@ -40,6 +40,17 @@ sub create_member {
     return $m;
 }
 
+sub members {
+    my $self = shift;
+    my $sth = $self->db->sql_execute(q{SELECT * from member});
+    my $results = $sth->fetchall_arrayref({});
+    my @members;
+    for my $m (@$results) {
+        push @members, ParlAPI::Model::Member->new($m);
+    }
+    return \@members;
+}
+
 sub _build_db { ParlAPI::DB->new }
 
 __PACKAGE__->meta->make_immutable;

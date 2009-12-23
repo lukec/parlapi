@@ -18,9 +18,9 @@ sub BUILDARGS {
     my $class = shift;
     my $args = shift;
 
-    $args->{name} = delete $args->{member_name};
-    $args->{url} = delete $args->{member_url};
-    $args->{website} = delete($args->{'web site'}) || '';
+    $args->{name} ||= delete $args->{member_name};
+    $args->{url} ||= delete $args->{member_url};
+    $args->{website} ||= delete($args->{'web site'}) || '';
     return $args;
 }
 

@@ -1,0 +1,8 @@
+[% WRAPPER wrapper.tt2 %]
+  <h2>Members of Parliament</h2>
+  <ul>
+    [% FOREACH m IN members %]
+      <li><a href="[% m.url %]">[% m.name %]</a></li>
+    [% END %]
+  </ul>
+[% END %]

@@ -5,7 +5,7 @@ with 'ParlAPI::Controller';
 sub index {
     my $self   = shift;
 
-    return $self->render('index.tt2');
+    return $self->render('index.html');
 }
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);

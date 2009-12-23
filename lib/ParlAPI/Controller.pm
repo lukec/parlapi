@@ -2,9 +2,11 @@ package ParlAPI::Controller;
 use Moose::Role;
 use Template;
 use Plack::Response;
+use ParlAPI::Model;
 use namespace::clean -except => 'meta';
 
 has 'template' => (is => 'ro', lazy_build => 1);
+has 'model'    => (is => 'ro', lazy_build => 1);
 
 sub render {
     my ($self, $template, $vars) = @_;
@@ -29,5 +31,7 @@ sub _build_template {
             INCLUDE_PATH => "$ENV{PWD}/templates",
         });
 }
+
+sub _build_model { ParlAPI::Model->new }
 
 1;
