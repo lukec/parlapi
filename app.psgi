@@ -16,6 +16,7 @@ my $app = Plack::App::HTTP::Router->new({ router => $router} )->to_app;
 
 builder {
     enable "Plack::Middleware::StackTrace";
+    enable "Debug";
     $app;
 };
 
