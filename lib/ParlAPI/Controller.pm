@@ -14,13 +14,13 @@ sub render {
 
     my $resp = Plack::Response->new(200);
     eval {
-        $resp->content_type('text/html');
+        $resp->content_type('text/html; charset=utf-8');
         $self->template->process($template, $vars || {}, 
                                  sub { $resp->body(shift) })
             || die "Template error: " . $self->template->error();
     };
     if ($@) {
-        $resp->content_type('text/plain');
+        $resp->content_type('text/plain; charset=utf-8');
         $resp->body($@);
     }
     return $resp->finalize;
@@ -31,7 +31,7 @@ sub render_json {
     my $hash = shift;
     
     my $resp = Plack::Response->new(200);
-    $resp->content_type('application/json');
+    $resp->content_type('application/json; charset=utf-8');
     $resp->body( to_json($hash, {utf8 => 1}) );
     return $resp->finalize;
 }
