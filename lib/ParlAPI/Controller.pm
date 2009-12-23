@@ -32,7 +32,7 @@ sub render_json {
     
     my $resp = Plack::Response->new(200);
     $resp->content_type('application/json; charset=utf-8');
-    $resp->body( to_json($hash, {utf8 => 1}) );
+    $resp->body( to_json($hash) );
     return $resp->finalize;
 }
 

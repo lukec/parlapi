@@ -27,13 +27,7 @@ sub _build_dbh {
     }
 
     my $dsn = "dbi:Pg:database=$db";
-    my $dbh = DBI->connect($dsn, $db_user, '', {
-            AutoCommit => 1,
-            pg_enable_utf8 => 1,
-            PrintError => 0,
-            RaiseError => 0,
-        },
-    );
+    my $dbh = DBI->connect($dsn, $db_user, '', { AutoCommit => 1, });
     die "Could not create DBH with $dsn: $!" unless $dbh;
     return $dbh;
 }
