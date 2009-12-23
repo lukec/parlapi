@@ -35,15 +35,15 @@ unless ($parliament) {
 
 my $np = Net::Parliament->new( %opts );
 
-my $members;
+my @members;
 if (1) {
     print "Fetching Members ...\n" if $verbose;
-    $members = $np->members(extended => 1);
+    my $member_hashes = $np->members(extended => 1, limit => 3);
     my $count = 1;
-    for my $m (@$members) {
+    for my $m (@$member_hashes) {
         print $count++, ") $m->{member_id} - $m->{member_name}\n";
         $model->delete_member($m->{member_id});
-        my $member = $model->create_member($m);
+        push @members, $model->create_member($m);
     }
 }
 
@@ -56,22 +56,23 @@ if (1) {
         $b->{parl_id} = $parliament->id;
         print $count++, ") $b->{name}\n";
         $model->delete_bill($b->{name});
-        $model->create_bill($b);
+        my $bill = $model->create_bill($b);
+        $bills{$bill->name} = $bill;
     }
 }
-exit;
-
 
 print "Fetching Member Votes ...\n" if $verbose;
-for my $m (@$members) {
-    my $votes = $np->member_votes($m->id);
+for my $m (@members) {
+    my $votes = $np->member_votes($m->member_id);
     for my $v (@$votes) {
+        use Data::Dumper;
+        warn Dumper $v;
         my $billname = $v->{RelatedBill}{number};
         my $bill = $bills{ $billname };
         unless ($bill) {
             warn "Could not find bill $billname\n";
             next;
         }
-
+        last;
     }
 }
