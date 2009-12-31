@@ -43,9 +43,14 @@ if (1) {
     for my $m (@$member_hashes) {
         print $count++, ") $m->{member_id} - $m->{member_name}\n";
         $model->delete_member($m->{member_id});
-        push @members, $model->create_member($m);
+        my $m = $model->create_member($m);
+        push @members, $m;
+        $model->db->sql_execute(
+            q{INSERT INTO parliament_members VALUES (?,?)},
+            $parliament->parl_id, $m->member_id);
     }
 }
+exit;
 
 my %bills;
 if (1) {
