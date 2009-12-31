@@ -9,7 +9,10 @@ sub pretty_list {
     my $req    = shift;
     my $params = shift;
 
-    my $members = $self->model->members;
+    my $parl = $self->model->get_parliament(%$params);
+    return $self->render('unknown_parliament.html', $params) unless $parl;
+
+    my $members = $self->model->members($parl);
 
     if (my $format = $params->{format} || '') {
         if ($format eq 'json') {
@@ -25,8 +28,7 @@ sub pretty_list {
     return $self->render('members.html', 
         { 
             members => $members,
-            json_url => '/members.json',
-            text_url => '/members.txt',
+            parliament => $parl,
         },
     );
 }
@@ -44,6 +46,7 @@ sub show_member {
     my $member = $self->model->get_member($member_id);
 
     if (my $format = $params->{format} || '') {
+        warn "format=$format";
         if ($format eq 'json') {
             return $self->render_json( $member->to_hash );
         }
@@ -57,7 +60,6 @@ sub show_member {
         }
     }
 
-    my $member_id = $member->member_id;
     return $self->render('member.html', 
         { 
             member => $member,

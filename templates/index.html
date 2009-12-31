@@ -25,13 +25,19 @@
 
   <h2>Resources</h2>
   <ul>
-  <!--
-    <li><a href="/members">Members</a></li>
-    <li><a href="/votes">Votes</a></li>
-    -->
-    <li><a href="/members">Members of Parliament</a></li>
-    <li><a href="/bills">House of Commons Bills</a></li>
-    <li>Votes</li>
+  [% FOREACH parl IN parliaments %]
+    <li>
+      <a href="[% parl.url %]">[% parl.name %]</a>
+      <ul>
+        <li>
+          <a href="[% parl.url %]/members">Members of Parliament</a>
+        </li>
+        <li>
+          <a href="[% parl.url %]/bills">House of Commons Bills</a>
+        </li>
+      </ul>
+    </li>
+  [% END %]
   </ul>
 </div>
 [% END %]

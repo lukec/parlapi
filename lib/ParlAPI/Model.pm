@@ -13,10 +13,7 @@ sub get_parliament {
     my %p = @_;
 
     my $sth = $self->db->sql_execute(q{
-            SELECT parl_id as id, 
-                   parl as parliament, 
-                   "session", start_date, end_date
-              FROM parliament 
+            SELECT * FROM parliament 
              WHERE parl = ? AND session = ?
         }, $p{parliament}, $p{session},
     );
@@ -54,6 +51,10 @@ sub delete_member {
         q{DELETE FROM member WHERE member_id = ?},
         $member_id,
     );
+    $self->db->sql_execute(
+        q{DELETE FROM parliament_members WHERE member_id = ?},
+        $member_id,
+    );
 }
 
 sub delete_bill {
@@ -80,9 +81,20 @@ sub create_bill {
     return $b;
 }
 
+sub parliaments {
+    my $self = shift;
+    return ParlAPI::Model::Parliament->All($self->db);
+}
+
 sub members {
     my $self = shift;
-    return ParlAPI::Model::Member->All($self->db);
+    my $parl = shift;
+    return ParlAPI::Model::Member->All(
+        $self->db,
+        'join' => 'LEFT JOIN parliament_members USING (member_id)',
+        where => 'parl_id = ?',
+        'bind' => [$parl->parl_id],
+    );
 }
 
 sub bills {

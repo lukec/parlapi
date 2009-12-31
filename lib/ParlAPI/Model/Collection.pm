@@ -9,11 +9,19 @@ sub All {
 
     my $table = $class->table;
     my $sql = qq{SELECT * from $table};
+    if (my $j = $opts{join}) {
+        $sql .= " $j";
+    }
+    if (my $w = $opts{where}) {
+        $sql .= " WHERE $w";
+    }
     if (my $ob = $opts{order_by}) {
         $sql .= " ORDER BY $ob";
     }
+    my $bind = $opts{bind} || [];
 
-    my $sth = $db->sql_execute($sql);
+    # warn "Executing: $sql (@$bind)";
+    my $sth = $db->sql_execute($sql, @$bind);
     my $results = $sth->fetchall_arrayref({});
     my @collection;
     for my $r (@$results) {

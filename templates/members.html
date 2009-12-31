@@ -1,5 +1,5 @@
 [% WRAPPER wrapper.tt2 %]
-  <h2>Members of Parliament</h2>
+  <h2>Members of the <a href="[% parliament.url %]">[% parliament.name %]</a></h2>
   <ul>
     [% FOREACH m IN members %]
       <li><a href="/members/[% m.member_id %]">[% m.name %]</a></li>
