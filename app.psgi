@@ -5,6 +5,8 @@ use HTTP::Router::Declare;
 
 my $router = router {
     match '/' => to { controller => 'ParlAPI', action => 'index' };
+
+    # Members
     match '/members' =>
         to { controller => 'ParlAPI::Members', action => 'pretty_list' };
     match '/members.{format}' =>
@@ -13,6 +15,10 @@ my $router = router {
         to { controller => 'ParlAPI::Members', action => 'show_member' };
     match '/members/{member}.format' =>
         to { controller => 'ParlAPI::Members', action => 'show_member' };
+
+    # Bills
+    match '/bills' =>
+        to { controller => 'ParlAPI::Bills', action => 'pretty_list' };
 };
 my $app = Plack::App::HTTP::Router->new({ router => $router} )->to_app;
 

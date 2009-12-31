@@ -82,13 +82,12 @@ sub create_bill {
 
 sub members {
     my $self = shift;
-    my $sth = $self->db->sql_execute(q{SELECT * from member});
-    my $results = $sth->fetchall_arrayref({});
-    my @members;
-    for my $m (@$results) {
-        push @members, ParlAPI::Model::Member->new($m);
-    }
-    return \@members;
+    return ParlAPI::Model::Member->All($self->db);
+}
+
+sub bills {
+    my $self = shift;
+    return ParlAPI::Model::Bill->All($self->db);
 }
 
 sub _build_db { ParlAPI::DB->new }

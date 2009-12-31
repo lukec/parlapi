@@ -1,0 +1,11 @@
+[% WRAPPER wrapper.tt2 %]
+  <h2>House of Commons Bills</h2>
+  <ul>
+    [% FOREACH b IN bills %]
+    <li>
+      <a href="/bills/[% b.name %]">[% b.name %]</a>
+       - [% b.summary %]
+    </li>
+    [% END %]
+  </ul>
+[% END %]

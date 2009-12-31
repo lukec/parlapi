@@ -2,15 +2,24 @@ package ParlAPI::Model::Bill;
 use Moose;
 use namespace::clean -except => 'meta';
 
-has 'id'            => (is => 'ro', isa => 'Int');
+with 'ParlAPI::Model::Collection';
+
+has 'bill_id'       => (is => 'ro', isa => 'Int', required   => 1);
 has 'name'          => (is => 'ro', isa => 'Str', required   => 1);
 has 'parl_id'       => (is => 'ro', isa => 'Int', required   => 1);
-has 'sponsor_id'    => (is => 'ro', isa => 'Int');
+has 'sponsor_id'    => (is => 'ro', isa => 'Maybe[Int]');
 has 'summary'       => (is => 'ro', isa => 'Str', required   => 1);
 has 'sponsor'       => (is => 'ro', isa => 'ParlAPI::Model::Member', lazy_build => 1);
 has 'sponsor_title' => (is => 'ro', isa => 'Str', required   => 1);
 has 'links' =>
     (is => 'rw', isa => 'ArrayRef[HashRef]', default => sub { [] });
+
+sub table { 'bill' }
+
+around 'All' => sub {
+    my $orig = shift;
+    return $orig->(@_, order_by => 'bill_id');
+};
 
 sub _build_sponsor {
     my $self = shift;

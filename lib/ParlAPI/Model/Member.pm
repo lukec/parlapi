@@ -2,6 +2,8 @@ package ParlAPI::Model::Member;
 use Moose;
 use namespace::clean -except => 'meta';
 
+with 'ParlAPI::Model::Collection';
+
 has 'member_id'    => (is => 'ro', isa => 'Str', required => 1);
 has 'name'         => (is => 'ro', isa => 'Str', required => 1);
 has 'url'          => (is => 'ro', isa => 'Str', required => 1);
@@ -13,6 +15,8 @@ has 'telephone'    => (is => 'rw', isa => 'Str');
 has 'fax'          => (is => 'rw', isa => 'Str');
 has 'province'     => (is => 'rw', isa => 'Str');
 has 'profile_photo_url' => (is => 'rw', isa  => 'Str');
+
+sub table { 'member' }
 
 sub BUILDARGS {
     my $class = shift;
