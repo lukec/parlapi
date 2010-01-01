@@ -24,6 +24,8 @@ sub BUILDARGS {
     return $args;
 }
 
+sub to_hash { shift->hash_repr }
+
 sub _build_name {
     my $self = shift;
     return _add_postfix($self->parliament) . " Parliament, "
@@ -44,7 +46,7 @@ sub _build_hash_repr {
     my $self = shift;
     return {
         map { $_ => $self->$_ }
-        qw/id name parliament session start_date end_date/
+        qw/parl_id name parliament session start_date end_date url short_name/
     };
 }
 

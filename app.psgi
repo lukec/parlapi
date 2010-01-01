@@ -11,9 +11,9 @@ my $router = router {
         to { controller => 'ParlAPI::Parliaments', action => 'show' };
 
     # Members
-    match '/parliaments/{parliament}-{session}/members' =>
-        to { controller => 'ParlAPI::Members', action => 'pretty_list' };
     match '/parliaments/{parliament}-{session}/members.{format}' =>
+        to { controller => 'ParlAPI::Members', action => 'pretty_list' };
+    match '/parliaments/{parliament}-{session}/members' =>
         to { controller => 'ParlAPI::Members', action => 'pretty_list' };
     match '/parliaments/{parliament}-{session}/members/{member}.{format}' =>
         to { controller => 'ParlAPI::Members', action => 'show_member' };
@@ -25,6 +25,8 @@ my $router = router {
         to { controller => 'ParlAPI::Members', action => 'show_member' };
 
     # Bills
+    match '/parliaments/{parliament}-{session}/bills.{format}' =>
+        to { controller => 'ParlAPI::Bills', action => 'pretty_list' };
     match '/parliaments/{parliament}-{session}/bills' =>
         to { controller => 'ParlAPI::Bills', action => 'pretty_list' };
     match '/parliaments/{parliament}-{session}/bills/{billname}' =>

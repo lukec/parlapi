@@ -13,6 +13,17 @@ sub pretty_list {
     return $self->render('unknown_parliament.html', $params) unless $parl;
 
     my $bills = $self->model->bills($parl);
+    if (my $format = $params->{format} || '') {
+        if ($format eq 'json') {
+            return $self->render_json( [ map { $_->to_hash } @$bills ] );
+        }
+        elsif ($format =~ m/^te?xt$/) {
+            return $self->render_text(join "\n", map { $_->name } @$bills);
+        }
+        else {
+            return $self->unknown_format($format);
+        }
+    }
 
     return $self->render('bills.html', 
         { 

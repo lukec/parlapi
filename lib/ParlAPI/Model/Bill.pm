@@ -23,6 +23,15 @@ around 'All' => sub {
     return $orig->(@_, order_by => 'bill_id');
 };
 
+sub to_hash {
+    my $self = shift;
+    return {
+        parliament => $self->parliament->to_hash,
+        links => $self->links,
+        map { $_ => $self->$_ } qw/name sponsor_id sponsor_title summary official_url/
+    };
+}
+
 sub _build_sponsor {
     my $self = shift;
     return ParlAPI::Model->get_member($self->sponsor_id);
