@@ -27,6 +27,8 @@ my $router = router {
     # Bills
     match '/parliaments/{parliament}-{session}/bills' =>
         to { controller => 'ParlAPI::Bills', action => 'pretty_list' };
+    match '/parliaments/{parliament}-{session}/bills/{billname}' =>
+        to { controller => 'ParlAPI::Bills', action => 'show_bill' };
 };
 my $app = Plack::App::HTTP::Router->new({ router => $router} )->to_app;
 

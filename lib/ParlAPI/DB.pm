@@ -10,6 +10,7 @@ sub sql_execute {
     my $statement = shift;
     my @bind = @_;
 
+#    warn "SQL: $statement (@bind)";
     my $sth = $self->dbh->prepare($statement);
     $sth->execute(@bind)
         || die "SQL execute failed: " . $sth->errstr;

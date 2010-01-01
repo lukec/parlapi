@@ -12,11 +12,18 @@ sub get_parliament {
     my $self = shift;
     my %p = @_;
 
-    my $sth = $self->db->sql_execute(q{
-            SELECT * FROM parliament 
-             WHERE parl = ? AND session = ?
-        }, $p{parliament}, $p{session},
-    );
+    my ($where, @bind);
+    if ($p{parl_id}) {
+        $where = 'parl_id = ?';
+        push @bind, $p{parl_id};
+    }
+    elsif ($p{parliament} and $p{session}) {
+        $where = 'parl = ? AND session = ?';
+        push @bind, $p{parliament}, $p{session};
+    }
+    else { die "Look ups by parl_id or parliament & session only" }
+
+    my $sth = $self->db->sql_execute(qq{SELECT * FROM parliament WHERE $where}, @bind);
     my $result = $sth->fetchall_arrayref({});
     return undef unless $result->[0];
     return ParlAPI::Model::Parliament->new($result->[0]);
@@ -42,6 +49,23 @@ sub get_member {
     my $result = $sth->fetchall_arrayref({});
     return undef unless $result->[0];
     return ParlAPI::Model::Member->new($result->[0]);
+}
+
+
+sub get_bill {
+    my $self = shift;
+    my $parl = shift;
+    my $bill_name = uc shift;
+    
+    my $sth = $self->db->sql_execute(qq{
+            SELECT * 
+              FROM bill
+             WHERE parl_id = ? AND name = ?
+        }, $parl->parl_id, $bill_name
+    );
+    my $result = $sth->fetchall_arrayref({});
+    return undef unless $result->[0];
+    return ParlAPI::Model::Bill->new($result->[0]);
 }
 
 sub delete_member {

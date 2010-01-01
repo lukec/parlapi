@@ -1,0 +1,27 @@
+[% WRAPPER wrapper.tt2 %]
+  <h2>House of Commons Bills - [% bill.name %]</h2>
+  <strong>Name:</strong> [% bill.name %]<br />
+  <strong>Parliament:</strong> <a href="[% parliament.url %]">[%
+      parliament.name %]</a><br />
+  <strong>Summary:</strong> [% bill.summary %]<br />
+  <strong>Sponsor title:</strong> [% bill.sponsor_title %]<br />
+  [% IF bill.sponsor_id %]
+  <strong>Sponsor ID:</strong>
+    <a href="http://webinfo.parl.gc.ca/MembersOfParliament/ProfileMP.aspx?Key=[% bill.sponsor_id %]&Language=E">[% bill.sponsor_id %]</a><br />
+  [% END %]
+  [% IF bill.sponsor %]
+    <strong>Sponsor:</strong>[% bill.sponsor.name %]<br />
+  [% END %]
+  [% IF bill.links.size > 0 %]
+    <ul>
+    [% FOR link IN bill.links %]
+      <li>
+        <a href="[% link.href %]">[% link.name %]</a>
+      </li>
+    [% END %]
+    </ul>
+  [% END %]
+  <p><a href="[% bill.official_url %]">Official Bill URL</a><br /></p>
+  <br />
+  <a href="[% parliament.url %]/bills">Back to bill list</a>
+[% END %]
