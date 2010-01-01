@@ -46,7 +46,6 @@ sub show_member {
     my $member = $self->model->get_member($member_id);
 
     if (my $format = $params->{format} || '') {
-        warn "format=$format";
         if ($format eq 'json') {
             return $self->render_json( $member->to_hash );
         }

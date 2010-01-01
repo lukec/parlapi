@@ -29,6 +29,8 @@ my $router = router {
         to { controller => 'ParlAPI::Bills', action => 'pretty_list' };
     match '/parliaments/{parliament}-{session}/bills' =>
         to { controller => 'ParlAPI::Bills', action => 'pretty_list' };
+    match '/parliaments/{parliament}-{session}/bills/{billname}.{format}' =>
+        to { controller => 'ParlAPI::Bills', action => 'show_bill' };
     match '/parliaments/{parliament}-{session}/bills/{billname}' =>
         to { controller => 'ParlAPI::Bills', action => 'show_bill' };
 };

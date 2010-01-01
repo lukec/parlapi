@@ -50,6 +50,25 @@ sub show_bill {
     }
     my $bill = $self->model->get_bill($parl, $bill_name);
 
+    if (my $format = $params->{format} || '') {
+        if ($format eq 'json') {
+            return $self->render_json( $bill->to_hash );
+        }
+        elsif ($format =~ m/^te?xt$/) {
+            my $hash = $bill->to_hash;
+            my $links = delete $hash->{links};
+            my $parl  = delete $hash->{parliament};
+            my $text = join "\n", map { "$_: $hash->{$_}" } keys %$hash;
+            $text .= "\n";
+            $text .= "Link: $_->{href} ($_->{name})\n" for @$links;
+            $text .= join "\n", map { "Parliament: $_: $parl->{$_}" } keys %$parl;
+            return $self->render_text($text);
+        }
+        else {
+            return $self->unknown_format($format);
+        }
+    }
+
     return $self->render('bill.html', 
         { 
             parliament => $parl,
