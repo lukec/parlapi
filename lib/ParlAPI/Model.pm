@@ -99,7 +99,12 @@ sub members {
 
 sub bills {
     my $self = shift;
-    return ParlAPI::Model::Bill->All($self->db);
+    my $parl = shift;
+    return ParlAPI::Model::Bill->All(
+        $self->db,
+        where => 'parl_id = ?',
+        'bind' => [$parl->parl_id],
+    );
 }
 
 sub _build_db { ParlAPI::DB->new }

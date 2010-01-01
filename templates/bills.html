@@ -3,7 +3,7 @@
   <ul>
     [% FOREACH b IN bills %]
     <li>
-      <a href="/bills/[% b.name %]">[% b.name %]</a>
+      <a href="[% parliament.url %]/bills/[% b.name %]">[% b.name %]</a>
        - [% b.summary %]
     </li>
     [% END %]

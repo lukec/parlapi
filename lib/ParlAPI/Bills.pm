@@ -9,13 +9,15 @@ sub pretty_list {
     my $req    = shift;
     my $params = shift;
 
-    my $bills = $self->model->bills;
+    my $parl = $self->model->get_parliament(%$params);
+    return $self->render('unknown_parliament.html', $params) unless $parl;
+
+    my $bills = $self->model->bills($parl);
 
     return $self->render('bills.html', 
         { 
+            parliament => $parl,
             bills => $bills,
-            json_url => '/bills.json',
-            text_url => '/bills.txt',
         },
     );
 }
