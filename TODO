@@ -1,0 +1,2 @@
+When we pull in Bills, we need to also grab the sponsor_id, as there appear to be multiple IDs for each person.
+* eg: 78738 -> Right Hon. Stephen Harper, as does 128440
