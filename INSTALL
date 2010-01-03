@@ -1,0 +1,22 @@
+To setup Parlapi:
+
+Choose a place that the web server will run (eg: parlapi user).
+
+git clone git://github.com/lukec/parlapi.git
+cd parlapi
+
+Create a database:
+* sudo -u postgres createdb -E utf8 parlapi
+* sudo -u postgres createuser parlapi
+** For developer environments, call it $USER_parlapi
+* sudo vi /etc/postgresql/8.3/main/pg_hba.conf 
+** Let the parlapi user access the parlapi DB
+
+Load the schema:
+* psql -f etc/sql/schema.sql
+
+Load the data:
+* bin/update-db
+OR load from an existing DB (much faster)
+* pg_dump --no-owner --clean lukec_parlapi > /tmp/parlapi.dump (as lukec)
+* psql -f /tmp/parlapi.dump (as you)
