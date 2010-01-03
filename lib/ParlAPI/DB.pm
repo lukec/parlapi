@@ -29,7 +29,7 @@ sub _build_dbh {
 
     my $db = 'parlapi';
     my $db_user = 'parlapi';
-    if ($> >= 1000) {
+    if ($> >= 1000 and $ENV{USER} ne 'parlapi') {
         $db = "$ENV{USER}_$db";
         $db_user = $ENV{USER};
     }
