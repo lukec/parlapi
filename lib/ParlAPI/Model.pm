@@ -34,7 +34,10 @@ sub get_member {
     my $maybe_id   = shift;
     
     my $where;
-    if ($maybe_id =~ m/\D/) {
+    if ($maybe_id =~ m/\@/) {
+        $where = 'LOWER(email) = LOWER(?)';
+    }
+    elsif ($maybe_id =~ m/\D/) {
         $where = 'LOWER(name) = LOWER(?)';
     }
     else {
@@ -118,6 +121,7 @@ sub members {
         'join' => 'LEFT JOIN parliament_members USING (member_id)',
         where => 'parl_id = ?',
         'bind' => [$parl->parl_id],
+        order_by => 'name ASC',
     );
 }
 
@@ -128,6 +132,7 @@ sub bills {
         $self->db,
         where => 'parl_id = ?',
         'bind' => [$parl->parl_id],
+        order_by => 'name ASC',
     );
 }
 
