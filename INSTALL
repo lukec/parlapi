@@ -20,3 +20,7 @@ Load the data:
 OR load from an existing DB (much faster)
 * pg_dump --no-owner --clean lukec_parlapi > /tmp/parlapi.dump (as lukec)
 * psql -f /tmp/parlapi.dump (as you)
+
+Launch it:
+* plackup -r --port 5002
+** the -r will cause plackup to look for locally modified files and auto-reload itself
