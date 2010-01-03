@@ -96,14 +96,18 @@
           <div id="mainbar">
             [% content %]
           </div>
+          [% IF json_url OR text_url %]
           <div id="formats">
+            This resource or collection can also be retrieved in these formats: 
             [% IF json_url %]
-              <a href="[% json_url %]">As JSON</a>
+              <a href="[% json_url %]">JSON</a>
             [% END %]
             [% IF text_url %]
-              <a href="[% text_url %]">As Text</a>
+              <a href="[% text_url %]">Text</a>
             [% END %]
+            [% IF api_text %][% api_text %][% END %]
           </div>
+          [% END %]
         </div>
     </body>
 </html>

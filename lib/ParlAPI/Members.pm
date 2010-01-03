@@ -25,10 +25,14 @@ sub pretty_list {
             return $self->unknown_format($format);
         }
     }
+    
+    my $url_base = '/parliaments/' . $parl->short_name . '/members';
     return $self->render('members.html', 
         { 
             members => $members,
             parliament => $parl,
+            text_url => "$url_base.txt",
+            json_url => "$url_base.json",
         },
     );
 }
