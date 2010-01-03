@@ -41,7 +41,7 @@ if (1) {
     my $member_hashes = $np->members(extended => 1, limit => 3);
     my $count = 1;
     for my $m (@$member_hashes) {
-        print $count++, ") $m->{member_id} - $m->{member_name}\n";
+        print $count++, ") $m->{member_id} - $m->{member_name} $m->{member_url}\n";
         $model->delete_member($m->{member_id});
         my $m = $model->create_member($m);
         push @members, $m;
@@ -50,7 +50,6 @@ if (1) {
             $parliament->parl_id, $m->member_id);
     }
 }
-exit;
 
 my %bills;
 if (1) {
@@ -58,8 +57,25 @@ if (1) {
     my $bills = $np->bills;
     my $count = 1;
     for my $b (@$bills) {
-        $b->{parl_id} = $parliament->id;
+        $b->{parl_id} = $parliament->parl_id;
         print $count++, ") $b->{name}\n";
+
+        if (my $member_id = $b->{sponsor_id}) {
+            unless ($model->get_member($member_id)) {
+                my $sponsor_hash = {
+                    member_url => $np->_members_base_url . 
+                        qq{ProfileMP.aspx?Language=E&Key=$member_id}
+                };
+                $np->_load_member($sponsor_hash);
+
+                # Try to load the member via their email, maybe we do have them.
+                if (my $mp = $model->get_member($sponsor_hash->{email})) {
+                    warn "  Found sponsor of $b->{name}: " . $mp->name . "\n";
+                    $b->{sponsor_id} = $mp->member_id;
+                }
+            }
+        }
+
         $model->delete_bill($b->{name});
         my $bill = $model->create_bill($b);
         $bills{$bill->name} = $bill;

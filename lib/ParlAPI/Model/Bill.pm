@@ -5,7 +5,7 @@ use namespace::clean -except => 'meta';
 
 with 'ParlAPI::Model::Collection';
 
-has 'bill_id'       => (is => 'ro', isa => 'Int', required   => 1);
+has 'bill_id'       => (is => 'ro', isa => 'Int');
 has 'name'          => (is => 'ro', isa => 'Str', required   => 1);
 has 'parl_id'       => (is => 'ro', isa => 'Int', required   => 1);
 has 'parliament'    => (is => 'ro', isa => 'ParlAPI::Model::Parliament', lazy_build => 1);
@@ -22,6 +22,13 @@ around 'All' => sub {
     my $orig = shift;
     return $orig->(@_, order_by => 'bill_id');
 };
+
+sub BUILDARGS {
+    my $class = shift;
+    my $args  = shift;
+    delete $args->{parliament}; # always lazy build this object
+    return $args;
+}
 
 sub to_hash {
     my $self = shift;
