@@ -1,37 +1,24 @@
-package ParlAPI::MemberVote;
+package ParlAPI::Model::MemberVote;
 use Moose;
 use namespace::clean -except => 'meta';
 
-has 'member' => (
-    is => 'ro',
-    isa => 'ParlAPI::Member',
-    required => 1,
-    weak_ref => 1,
-);
+has 'member_id'    => (is => 'ro', isa => 'Int', required => 1);
+has 'bill_vote_id' => (is => 'ro', isa => 'Int', required => 1);
+has 'vote'         => (is => 'ro', isa => 'Int', required => 1);
 
-has 'bill' => (
-    is => 'ro',
-    isa => 'ParlAPI::Bill',
-    required => 1,
-    weak_ref => 1,
-);
+has 'bill'      => (is => 'ro', isa => 'ParlAPI::Bill',     lazy_build => 1);
+has 'bill_vote' => (is => 'ro', isa => 'ParlAPI::BillVote', lazy_build => 1);
+has 'member'    => (is => 'ro', isa => 'ParlAPI::Member',   lazy_build => 1);
 
-has 'bill_vote' => (
-    is => 'ro',
-    isa => 'ParlAPI::BillVote',
-    required => 1,
-    weak_ref => 1,
-);
+sub insert {
+    my $self = shift;
+    my $db = shift;
 
-
-sub Create {
-    my $class   = shift;
-    my %opts    = @_;
-    my $bill    = $opts{bill} or die "No bill supplied!";
-    my $voteref = delete $opts{vote} or die "No vote supplied!";
-
-    $opts{bill_vote} = $bill->find_vote($voteref->{date});
-    return $class->new(%opts);
+    my @fields = qw/bill_vote_id member_id vote/;
+    my $sql = q{INSERT INTO member_vote (}.join(', ', @fields)
+            . q{) VALUES (?,?,?)};
+    my @bind = map { $self->$_} @fields;
+    $db->sql_execute($sql, @bind);
 }
 
 __PACKAGE__->meta->make_immutable;

@@ -36,7 +36,7 @@ unless ($parliament) {
 my $np = Net::Parliament->new( %opts );
 
 my @members;
-if (1) {
+if (0) {
     print "Fetching Members ...\n" if $verbose;
     my $member_hashes = $np->members(extended => 1, limit => 3);
     my $count = 1;
@@ -52,7 +52,7 @@ if (1) {
 }
 
 my %bills;
-if (1) {
+if (0) {
     print "Fetching Bills ...\n" if $verbose;
     my $bills = $np->bills;
     my $count = 1;
@@ -83,17 +83,32 @@ if (1) {
 }
 
 print "Fetching Member Votes ...\n" if $verbose;
+@members = @{ $model->members($parliament) } unless @members;
 for my $m (@members) {
+    print "Fetching votes for " . $m->name . ":\n";
     my $votes = $np->member_votes($m->member_id);
     for my $v (@$votes) {
-        use Data::Dumper;
-        warn Dumper $v;
         my $billname = $v->{RelatedBill}{number};
-        my $bill = $bills{ $billname };
+        my $bill = $model->get_bill($parliament, $billname);
         unless ($bill) {
             warn "Could not find bill $billname\n";
+            use Data::Dumper;
+            warn Dumper $v;
             next;
         }
-        last;
+        print " $billname";
+
+        my $bv;
+        unless ($bv = $model->get_billvote($bill->bill_id, $v->{sitting})) {
+            $bv = $model->create_billvote($bill, $m, $v);
+        }
+        $model->create_membervote({
+                bill_vote_id => $bv->bill_vote_id,
+                member_id => $m->member_id,
+                vote => $v->{RecordedVote},
+            });
     }
 }
+
+exit;
+
