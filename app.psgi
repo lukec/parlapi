@@ -33,6 +33,10 @@ my $router = router {
         to { controller => 'ParlAPI::Bills', action => 'show_bill' };
     match '/parliaments/{parliament}-{session}/bills/{billname}' =>
         to { controller => 'ParlAPI::Bills', action => 'show_bill' };
+
+    # Self update
+    match '/self-update' =>
+        to { controller => 'ParlAPI::Updater', action => 'update' };
 };
 my $app = Plack::App::HTTP::Router->new({ router => $router} )->to_app;
 
