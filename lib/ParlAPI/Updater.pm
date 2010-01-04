@@ -9,7 +9,7 @@ sub update {
     my $req    = shift;
     my $params = shift;
 
-    my $updater = "$ENV{PWD}/bin/parlapi-update";
+    my $updater = "$ENV{PWD}/bin/parlapi-updater";
     if (-x $updater) {
         return $self->render_text(qx{$updater});
     }
