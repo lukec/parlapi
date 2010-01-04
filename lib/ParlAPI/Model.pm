@@ -61,13 +61,18 @@ sub get_bill {
     my $self = shift;
     my $parl = shift;
     my $bill_name = uc shift;
+
+    my ($where, @bind);
+    if (defined $parl) {
+        $where = q{parl_id = ? and name = ?};
+        push @bind, $parl->parl_id, $bill_name;
+    }
+    else {
+        $where = q{bill_id = ?};
+        push @bind, $bill_name;
+    }
     
-    my $sth = $self->db->sql_execute(qq{
-            SELECT * 
-              FROM bill
-             WHERE parl_id = ? AND name = ?
-        }, $parl->parl_id, $bill_name
-    );
+    my $sth = $self->db->sql_execute(qq{ SELECT * FROM bill WHERE $where }, @bind);
     my $result = $sth->fetchall_arrayref({});
     return undef unless $result->[0];
     return ParlAPI::Model::Bill->new($result->[0]);
@@ -75,14 +80,20 @@ sub get_bill {
 
 sub get_billvote {
     my $self = shift;
-    my $bill_id = shift;
+    my $maybe_bill_id = shift;
     my $sitting = shift;
 
-    my $sth = $self->db->sql_execute(qq{
-            SELECT * FROM bill_vote
-             WHERE bill_id = ? AND sitting = ?
-        }, $bill_id, $sitting
-    );
+    my ($where, @bind);
+    if (defined $sitting) {
+        $where = q{bill_id = ? and sitting = ?};
+        push @bind, $maybe_bill_id, $sitting;
+    }
+    else {
+        $where = q{bill_vote_id = ?};
+        push @bind, $maybe_bill_id;
+    }
+    
+    my $sth = $self->db->sql_execute(qq{SELECT * FROM bill_vote WHERE $where}, @bind);
     my $result = $sth->fetchall_arrayref({});
     return undef unless $result->[0];
     return ParlAPI::Model::BillVote->new($result->[0]);
@@ -193,6 +204,18 @@ sub bills {
         where => 'parl_id = ?',
         'bind' => [$parl->parl_id],
         order_by => 'name ASC',
+    );
+}
+
+sub votes {
+    my $self = shift;
+    my $parl = shift;
+    return ParlAPI::Model::BillVote->All(
+        $self->db,
+        'join' => 'JOIN bill USING (bill_id)',
+        where => 'parl_id = ?',
+        'bind' => [$parl->parl_id],
+        order_by => 'date DESC',
     );
 }
 

@@ -1,5 +1,6 @@
 package ParlAPI::Model::BillVote;
 use Moose;
+use ParlAPI::Model;
 use namespace::clean -except => 'meta';
 
 with 'ParlAPI::Model::Collection';
@@ -8,7 +9,6 @@ has 'bill' => (
     is         => 'ro',
     isa        => 'ParlAPI::Model::Bill',
     lazy_build => 1,
-    weak_ref   => 1,
 );
 
 has 'id'        => (is => 'ro', isa => 'Str',  lazy_build => 1);
@@ -21,8 +21,16 @@ has 'date'      => (is => 'ro', isa => 'Str',  required   => 1);
 has 'number'    => (is => 'ro', isa => 'Int',  required   => 1);
 has 'sitting'   => (is => 'ro', isa => 'Int',  required   => 1);
 has 'agreed_to' => (is => 'ro', isa => 'Bool', lazy_build => 1);
+has 'nice_date' => (is => 'ro', isa => 'Str',  lazy_build => 1);
+has 'name'      => (is => 'ro', isa => 'Str',  lazy_build => 1);
 has 'bill_vote_id'   => (is => 'ro', isa => 'Str');
 
+sub table { 'bill_vote' }
+
+sub _build_name {
+    my $self = shift;
+    return $self->nice_date . ' vote on ' . $self->bill->name;
+}
 
 sub _build_id {
     my $self = shift;
@@ -32,6 +40,17 @@ sub _build_id {
 sub _build_agreed_to {
     my $self = shift;
     return $self->decision eq 'Agreed to';
+}
+
+sub _build_bill {
+    my $self = shift;
+    return ParlAPI::Model->get_bill(undef, $self->bill_id);
+}
+
+sub _build_nice_date {
+    my $self = shift;
+    my $date = $self->date;
+    return substr $date, 0, 10;
 }
 
 sub insert {

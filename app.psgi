@@ -34,6 +34,14 @@ my $router = router {
     match '/parliaments/{parliament}-{session}/bills/{billname}' =>
         to { controller => 'ParlAPI::Bills', action => 'show_bill' };
 
+    # Votes
+    match '/parliaments/{parliament}-{session}/votes.{format}' =>
+        to { controller => 'ParlAPI::Votes', action => 'pretty_list' };
+    match '/parliaments/{parliament}-{session}/votes' =>
+        to { controller => 'ParlAPI::Votes', action => 'pretty_list' };
+    match '/parliaments/{parliament}-{session}/votes/{bill_vote_id}' =>
+        to { controller => 'ParlAPI::Votes', action => 'show_vote' };
+
     # Self update
     match '/self-update' =>
         to { controller => 'ParlAPI::Updater', action => 'update' };
