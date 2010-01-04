@@ -83,7 +83,7 @@ CREATE TABLE member_vote (
     -- 2 = paired
 );
 
-CREATE UNIQUE INDEX member_vote__id ON member_vote (bill_vote_id);
+CREATE UNIQUE INDEX member_vote__id ON member_vote (bill_vote_id, member_id);
 CREATE INDEX member_vote__member_id ON member_vote (member_id);
 
 COMMIT;
