@@ -1,0 +1,25 @@
+[% WRAPPER wrapper.tt2 %]
+  <h2>House of Commons Votes - [% vote.name %]</h2>
+  <strong>Name:</strong> [% bill.name %]<br />
+  <strong>Parliament:</strong> <a href="[% parliament.url %]">[%
+      parliament.name %]</a><br />
+  <strong>Summary:</strong> [% bill.summary %]<br />
+  <strong>Sponsor title:</strong> [% bill.sponsor_title %]<br />
+  [% IF bill.sponsor %]
+    <strong>Sponsor:</strong><a href="/members/[% bill.sponsor.member_id %]">[% bill.sponsor.name %]</a> (<a href="[% bill.sponsor.member_url %]">Official</a>)<br />
+  [% ELSIF bill.sponsor_id %]
+  <strong>Sponsor ID:</strong>
+    <a href="http://webinfo.parl.gc.ca/MembersOfParliament/ProfileMP.aspx?Key=[% bill.sponsor_id %]&Language=E">[% bill.sponsor_id %]</a><br />
+  [% END %]
+  <hr />
+  <h3>Vote Summary</h3>
+  [% SET vote_url = parliament.url _ '/votes/' _ vote.bill_vote_id %]
+  <strong>Yeas:</strong> <a href="[% vote_url _ '/yeas' %]">[% vote.yays %]</a><br />
+  <strong>Nays:</strong> <a href="[% vote_url _ '/nays' %]">[% vote.nays %]</a><br />
+  <strong>Paired:</strong> <a href="[% vote_url _ '/paired' %]">[% vote.paired %]</a><br />
+  <strong>Decision:</strong> [% vote.decision %]<br />
+  <strong>Number:</strong> [% vote.number %]<br />
+  <strong>Sitting:</strong> [% vote.sitting %]<br />
+  <br />
+  <a href="[% parliament.url %]/votes">Back to vote list</a>
+[% END %]

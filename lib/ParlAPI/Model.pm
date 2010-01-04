@@ -56,6 +56,20 @@ sub get_member {
     return ParlAPI::Model::Member->new($result->[0]);
 }
 
+sub get_members_by_vote {
+    my $self = shift;
+    my $bill_vote_id = shift;
+    my $vote_num = shift;
+
+    return ParlAPI::Model::Member->All(
+        $self->db,
+        'join' => 'JOIN member_vote USING (member_id)',
+        where => 'bill_vote_id = ? AND vote = ?',
+        'bind' => [$bill_vote_id, $vote_num],
+        order_by => 'name ASC',
+    );
+}
+
 
 sub get_bill {
     my $self = shift;

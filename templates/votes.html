@@ -1,0 +1,11 @@
+[% WRAPPER wrapper.tt2 %]
+  <h2>House of Commons Votes</h2>
+  <ul>
+    [% FOREACH v IN votes %]
+    [% SET b = v.bill %]
+    <li>
+      <a href="[% parliament.url %]/votes/[% v.bill_vote_id %]">[% b.name %] [% v.nice_date %]</a> - ([% v.decision %]) - [% b.summary %]
+    </li>
+    [% END %]
+  </ul>
+[% END %]
