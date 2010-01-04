@@ -1,0 +1,25 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use FindBin;
+use POSIX ();
+
+chdir "$FindBin::Bin/..";
+my $output = qx(git pull --rebase 2>&1);
+
+print $output;
+
+if ($output =~ m/Fast-forwarded/) {
+    print "Code updated, restarting server.\n";
+    my $pid = qx(ps aux | grep start_server | grep 5005 | grep -v grep | awk '{print \$2}');
+    chomp $pid;
+    if ($pid) {
+	print "Attempting to restart $pid\n";
+	my $signalled = kill POSIX::SIGHUP, $pid;
+	if ($signalled == 0) {
+	    print "Could not SIGHUP $pid\n";
+	}
+    }
+}
+
+

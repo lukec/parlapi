@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use FindBin;
+use App::Daemon qw( daemonize ); 
+
+my $base_dir = "$FindBin::Bin/..";
+$App::Daemon::logfile = "$base_dir/log/parlapi.log";
+
+daemonize();
+
+system("killall plackup");
+system("killall start_server");
+system("start_server --port=5005 -- plackup -s Standalone::Prefork::Server::Starter");
