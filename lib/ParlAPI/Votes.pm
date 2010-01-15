@@ -97,7 +97,8 @@ sub show_voters {
 
     my %name_to_num = ( nays => 0, yeas => 1, yays => 1, paired => 2 );
     my $vote = $params->{vote};
-    my $vote_num = $name_to_num{ $vote } or die "Not a valid vote: $vote";
+    my $vote_num = $name_to_num{ $vote };
+    die "Not a valid vote: $vote" unless defined $vote_num;
 
     my $members = $self->model->get_members_by_vote($bill_vote_id, $vote_num);
 
